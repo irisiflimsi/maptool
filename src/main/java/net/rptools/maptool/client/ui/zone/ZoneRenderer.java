@@ -4639,6 +4639,42 @@ public class ZoneRenderer extends JComponent
           token.setSnapToGrid(AppPreferences.getBackgroundsStartSnapToGrid());
           token.setVisible(AppPreferences.getNewBackgroundsVisible());
 
+          MD5Key assetId = token.getImageAssetId();
+          Asset asset = AssetManager.getAsset(assetId);
+          double[] geopts = asset.getGeopts();
+          if (geopts != null && geopts.length > 6 && geopts[6] > 5.9) {
+            // Snapping is senseless for world coordinates
+            token.setSnapToScale(false);
+            token.setSnapToGrid(false);
+            BufferedImage image = ImageManager.getImageAndWait(assetId);
+            // Transform: token is centered, map has pivot geoopts[0,1] = geoopts[2,3],
+            // observe different world, token, image coords;
+            int imageW = image.getWidth();
+            int imageH = image.getHeight();
+            double worldX = geopts[2] - geopts[0] * geopts[4];
+            double worldY = geopts[3] - geopts[1] * geopts[5];
+            double worldW = imageW * geopts[4];
+            double worldH = -imageH * geopts[5];
+            // Assume 50 pixel = 1m
+            int tokenX = (int) (worldX * 2500000); // 1/360 degrees * 36000 km * 50px/cell / 2u/cell
+            int tokenY = (int) (-worldY * 2500000);
+            int tokenW = (int) (worldW * 2500000);
+            int tokenH = (int) (-worldH * 2500000);
+            token.setX(tokenX);
+            token.setY(tokenY);
+            token.setWidth(tokenW);
+            token.setHeight(tokenH);
+            log.debug("imageW={}, imageH={}", imageW, imageH);
+            log.debug(
+                "worldx1={}, worldy1={}, worldx2={}, worldy2={}, worldW={}, worldH={}",
+                worldX,
+                worldY,
+                worldX + worldW,
+                worldY + worldH,
+                worldW,
+                worldH);
+            log.debug("tokenX={}, tokenY={}, tokenW={}, tokenH={}", tokenX, tokenY, tokenW, tokenH);
+          }
           // Center on drop point
           if (!token.isSnapToScale() && !token.isSnapToGrid()) {
             token.setX(token.getX() - size.width / 2);
