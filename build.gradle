@@ -233,6 +233,7 @@ repositories {
     maven { url = 'http://maptool.craigs-stuff.net/repo/' }
     maven { url = 'https://nerps.net/repo/' }
     maven { url = 'https://jitpack.io' }
+    maven { url = "https://repo.osgeo.org/repository/release/" }
 }
 
 
@@ -254,6 +255,7 @@ dependencies {
     implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
     implementation group: 'org.apache.commons', name: 'commons-configuration2', version: '2.7'
 
+    //implementation 'xerces:xercesImpl:2.11.0'
     implementation 'commons-beanutils:commons-beanutils:1.9.4'
     implementation 'commons-io:commons-io:2.6'
     implementation 'commons-jxpath:commons-jxpath:1.3'
@@ -357,8 +359,9 @@ dependencies {
 
     // Noise Generator
     implementation 'com.github.cwisniew:NoiseLib:1.0.0-rc3' // The most recent version, 1.0.0 is build for a later java version: major version 55 is newer than 54, the highest major version supported by this compiler
-}
 
+    implementation 'org.geotools:gt-wms:2.7.2'
+}
 
 task configSentryRelease(type: Copy) {
     from("build-resources/sentry.properties.template")

@@ -55,6 +55,7 @@ import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 import net.rptools.lib.CodeTimer;
 import net.rptools.lib.MD5Key;
+import net.rptools.lib.image.WtsImage;
 import net.rptools.lib.swing.ImageBorder;
 import net.rptools.lib.swing.ImageLabel;
 import net.rptools.lib.swing.SwingUtil;
@@ -2106,6 +2107,11 @@ public class ZoneRenderer extends JComponent
             (int) (mapImage.getHeight() * scaleFactor),
             null);
       }
+
+      // World
+      double scaleFactor = getScale();
+      WtsImage.render(bbg, size, scaleFactor, getViewOffsetX(), getViewOffsetY());
+
       bbg.dispose();
       drawBackground = false;
     }
