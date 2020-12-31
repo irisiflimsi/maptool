@@ -360,7 +360,7 @@ dependencies {
     // Noise Generator
     implementation 'com.github.cwisniew:NoiseLib:1.0.0-rc3' // The most recent version, 1.0.0 is build for a later java version: major version 55 is newer than 54, the highest major version supported by this compiler
 
-    implementation 'org.geotools:gt-wms:2.7.2'
+    implementation('org.geotools:gt-wms:24.1')
 }
 
 task configSentryRelease(type: Copy) {
