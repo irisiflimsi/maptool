@@ -221,57 +221,15 @@ public class Asset {
         for (int i = 0; i < length; i++) {
           Node attr = map.item(i);
           if (attr.getNodeName().equals("number") && attr.getNodeValue().equals("33922")) {
-            result[0] =
-                Double.parseDouble(
-                    node.getFirstChild()
-                        .getChildNodes()
-                        .item(0)
-                        .getAttributes()
-                        .getNamedItem("value")
-                        .getNodeValue());
-            result[1] =
-                Double.parseDouble(
-                    node.getFirstChild()
-                        .getChildNodes()
-                        .item(1)
-                        .getAttributes()
-                        .getNamedItem("value")
-                        .getNodeValue());
-            result[2] =
-                Double.parseDouble(
-                    node.getFirstChild()
-                        .getChildNodes()
-                        .item(3)
-                        .getAttributes()
-                        .getNamedItem("value")
-                        .getNodeValue());
-            result[3] =
-                Double.parseDouble(
-                    node.getFirstChild()
-                        .getChildNodes()
-                        .item(4)
-                        .getAttributes()
-                        .getNamedItem("value")
-                        .getNodeValue());
+            result[0] = extractValueFromChild(node, 0);
+            result[1] = extractValueFromChild(node, 1);
+            result[2] = extractValueFromChild(node, 3);
+            result[3] = extractValueFromChild(node, 4);
             result[6] += 4;
           }
           if (attr.getNodeName().equals("number") && attr.getNodeValue().equals("33550")) {
-            result[4] =
-                Double.parseDouble(
-                    node.getFirstChild()
-                        .getChildNodes()
-                        .item(0)
-                        .getAttributes()
-                        .getNamedItem("value")
-                        .getNodeValue());
-            result[5] =
-                Double.parseDouble(
-                    node.getFirstChild()
-                        .getChildNodes()
-                        .item(1)
-                        .getAttributes()
-                        .getNamedItem("value")
-                        .getNodeValue());
+            result[4] = extractValueFromChild(node, 0);
+            result[5] = extractValueFromChild(node, 1);
             result[6] += 2;
           }
           // Return when done
@@ -296,5 +254,20 @@ public class Asset {
       e.printStackTrace();
     }
     return result;
+  }
+
+  /**
+   * Private static node extractor. Get value attribute from childIdx, a child from the first child
+   * of parent - as double.
+   */
+  private static double extractValueFromChild(Node parent, int childIdx) {
+    return Double.parseDouble(
+        parent
+            .getFirstChild()
+            .getChildNodes()
+            .item(childIdx)
+            .getAttributes()
+            .getNamedItem("value")
+            .getNodeValue());
   }
 }

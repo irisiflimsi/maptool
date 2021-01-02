@@ -23,9 +23,12 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.Set;
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
+import net.rptools.lib.image.WmsImage;
 import net.rptools.lib.swing.PaintChooser;
 import net.rptools.lib.swing.SwingUtil;
 import net.rptools.maptool.client.*;
@@ -153,6 +156,8 @@ public class MapPropertiesDialog extends JDialog {
 
     initDistanceTextField();
     initPixelsPerCellTextField();
+    initWmsScaleTextField();
+    initWmsUrlTextField();
     initDefaultVisionTextField();
     initVisionTypeCombo();
     initAStarRoundingOptionsComboBox();
@@ -258,6 +263,9 @@ public class MapPropertiesDialog extends JDialog {
     getNameTextField().setText(zone.getName());
     // Localizes units per cell, using the proper separator. Fixes #507.
     getDistanceTextField().setText(StringUtil.formatDecimal(zone.getUnitsPerCell(), 1));
+    getWmsScaleTextField().setText(Integer.toString(zone.getWmsScale(), 1));
+    getWmsUrlTextField().setText(zone.getWmsUrl());
+    getWmsLayersTextField().setText(String.join(",", zone.getWmsLayers()));
     getPixelsPerCellTextField().setText(Integer.toString(zone.getGrid().getSize()));
     getDefaultVisionTextField().setText(Integer.toString(zone.getTokenVisionDistance()));
     getHexVerticalRadio().setSelected(zone.getGrid() instanceof HexGridVertical);
@@ -280,6 +288,10 @@ public class MapPropertiesDialog extends JDialog {
     zone.setName(getNameTextField().getText().trim());
     zone.setUnitsPerCell(
         StringUtil.parseDecimal(getDistanceTextField().getText(), zone.getUnitsPerCell()));
+    zone.setWmsScale(StringUtil.parseInteger(getWmsScaleTextField().getText(), zone.getWmsScale()));
+    zone.setWmsUrl(getWmsUrlTextField().getText());
+    zone.setWmsLayers(
+        new LinkedList<String>(Arrays.asList(getWmsLayersTextField().getText().split(","))));
     zone.setGrid(createZoneGrid());
     zone.setTokenVisionDistance(
         StringUtil.parseInteger(
@@ -317,8 +329,28 @@ public class MapPropertiesDialog extends JDialog {
     getNoGridRadio().setSelected(GridFactory.isNone(AppPreferences.getDefaultGridType()));
   }
 
+  public JTextField getWmsScaleTextField() {
+    return formPanel.getTextField("wmsScale");
+  }
+
+  public JTextField getWmsUrlTextField() {
+    return formPanel.getTextField("wmsUrl");
+  }
+
+  public JTextField getWmsLayersTextField() {
+    return formPanel.getTextField("wmsLayers");
+  }
+
   public JTextField getDistanceTextField() {
     return formPanel.getTextField("distance");
+  }
+
+  private void initWmsScaleTextField() {
+    getDistanceTextField().setText(Integer.toString(WmsImage.WMS_SCALE));
+  }
+
+  private void initWmsUrlTextField() {
+    getDistanceTextField().setText("");
   }
 
   private void initDistanceTextField() {
@@ -460,6 +492,18 @@ public class MapPropertiesDialog extends JDialog {
 
   public JTextField getPixelsPerCellTextField() {
     return formPanel.getTextField("pixelsPerCell");
+  }
+
+  public JTextField getWMSScaleTextField() {
+    return formPanel.getTextField("wmsScale");
+  }
+
+  public JTextField getWMSUrlTextField() {
+    return formPanel.getTextField("wmsUrl");
+  }
+
+  public JTextField getWMSLayersTextField() {
+    return formPanel.getTextField("wmsLayers");
   }
 
   private void initPixelsPerCellTextField() {

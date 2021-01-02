@@ -20,6 +20,7 @@ import java.awt.Rectangle;
 import java.awt.geom.Area;
 import java.util.*;
 import net.rptools.lib.MD5Key;
+import net.rptools.lib.image.WmsImage;
 import net.rptools.maptool.client.AppPreferences;
 import net.rptools.maptool.client.AppUtil;
 import net.rptools.maptool.client.MapTool;
@@ -136,6 +137,8 @@ public class Zone extends BaseModel {
   public static final int DEFAULT_TOKEN_VISION_DISTANCE = 250; // In units
   public static final int DEFAULT_PIXELS_CELL = 50;
   public static final int DEFAULT_UNITS_PER_CELL = 5;
+  public static final int DEFAULT_WMS_SCALE = WmsImage.WMS_SCALE;
+  public static final String DEFAULT_WMS_URL = "";
 
   public static final DrawablePaint DEFAULT_FOG = new DrawableColorPaint(Color.black);
 
@@ -157,6 +160,9 @@ public class Zone extends BaseModel {
   private int tokenVisionDistance = DEFAULT_TOKEN_VISION_DISTANCE;
 
   private double unitsPerCell = DEFAULT_UNITS_PER_CELL;
+  private int wmsScale = DEFAULT_WMS_SCALE;
+  private String wmsUrl = DEFAULT_WMS_URL;
+  private List<String> wmsLayers = new LinkedList<String>();
   private AStarRoundingOptions aStarRounding = AStarRoundingOptions.NONE;
   private TopologyMode topologyMode = null; // get default from AppPreferences
 
@@ -348,6 +354,9 @@ public class Zone extends BaseModel {
       MapTool.showError("Trying to copy the zone's grid; no grid assigned", cnse);
     }
     unitsPerCell = zone.unitsPerCell;
+    wmsScale = zone.wmsScale;
+    wmsUrl = zone.wmsUrl;
+    wmsLayers = zone.wmsLayers;
     tokenVisionDistance = zone.tokenVisionDistance;
     imageScaleX = zone.imageScaleX;
     imageScaleY = zone.imageScaleY;
@@ -1079,8 +1088,32 @@ public class Zone extends BaseModel {
     return Math.max(unitsPerCell, 0);
   }
 
+  public int getWmsScale() {
+    return Math.max(wmsScale, 0);
+  }
+
+  public String getWmsUrl() {
+    return wmsUrl;
+  }
+
+  public List<String> getWmsLayers() {
+    return wmsLayers;
+  }
+
   public void setUnitsPerCell(double unitsPerCell) {
     this.unitsPerCell = unitsPerCell;
+  }
+
+  public void setWmsScale(int wmsScale) {
+    this.wmsScale = wmsScale;
+  }
+
+  public void setWmsUrl(String wmsUrl) {
+    this.wmsUrl = wmsUrl;
+  }
+
+  public void setWmsLayers(List<String> wmsLayers) {
+    this.wmsLayers = wmsLayers;
   }
 
   public AStarRoundingOptions getAStarRounding() {
