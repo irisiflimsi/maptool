@@ -137,7 +137,7 @@ public class Zone extends BaseModel {
   public static final int DEFAULT_TOKEN_VISION_DISTANCE = 250; // In units
   public static final int DEFAULT_PIXELS_CELL = 50;
   public static final int DEFAULT_UNITS_PER_CELL = 5;
-  public static final int DEFAULT_WMS_SCALE = WmsImage.WMS_SCALE;
+  public static final double DEFAULT_WMS_MPERCELL = WmsImage.WMS_MPERCELL;
   public static final String DEFAULT_WMS_URL = "";
 
   public static final DrawablePaint DEFAULT_FOG = new DrawableColorPaint(Color.black);
@@ -160,7 +160,7 @@ public class Zone extends BaseModel {
   private int tokenVisionDistance = DEFAULT_TOKEN_VISION_DISTANCE;
 
   private double unitsPerCell = DEFAULT_UNITS_PER_CELL;
-  private int wmsScale = DEFAULT_WMS_SCALE;
+  private double wmsMPerCell = DEFAULT_WMS_MPERCELL;
   private String wmsUrl = DEFAULT_WMS_URL;
   private List<String> wmsLayers = new LinkedList<String>();
   private AStarRoundingOptions aStarRounding = AStarRoundingOptions.NONE;
@@ -354,7 +354,7 @@ public class Zone extends BaseModel {
       MapTool.showError("Trying to copy the zone's grid; no grid assigned", cnse);
     }
     unitsPerCell = zone.unitsPerCell;
-    wmsScale = zone.wmsScale;
+    wmsMPerCell = zone.wmsMPerCell;
     wmsUrl = zone.wmsUrl;
     wmsLayers = zone.wmsLayers;
     tokenVisionDistance = zone.tokenVisionDistance;
@@ -1088,8 +1088,8 @@ public class Zone extends BaseModel {
     return Math.max(unitsPerCell, 0);
   }
 
-  public int getWmsScale() {
-    return Math.max(wmsScale, 0);
+  public double getWmsMPerCell() {
+    return Math.max(wmsMPerCell, 0);
   }
 
   public String getWmsUrl() {
@@ -1104,8 +1104,8 @@ public class Zone extends BaseModel {
     this.unitsPerCell = unitsPerCell;
   }
 
-  public void setWmsScale(int wmsScale) {
-    this.wmsScale = wmsScale;
+  public void setWmsMPerCell(double wmsMPerCell) {
+    this.wmsMPerCell = wmsMPerCell;
   }
 
   public void setWmsUrl(String wmsUrl) {

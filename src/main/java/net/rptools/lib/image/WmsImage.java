@@ -37,6 +37,8 @@ import org.geotools.ows.wms.WebMapServer;
 import org.geotools.ows.wms.request.GetMapRequest;
 import org.geotools.ows.wms.response.GetMapResponse;
 
+// Example wmsLayers = "TOPO-WMS";
+// Example wmsURL = "https://ows.mundialis.de/services/service?VERSION=1.3.1&Service=WMS";
 public class WmsImage {
   private static final Logger log = LogManager.getLogger(WmsImage.class);
   /**
@@ -44,16 +46,12 @@ public class WmsImage {
    * at all. We still assume so, for the simple reason, that I assume that 10%-20% inaccuracy in the
    * absolute numbers is not going to matter for RPGs. If it ever does, this calculation must be
    * redone, or people providing maps with geo-coordinates need to drop maps in a place where the
-   * numbers are correct. Thus: 1 degree (LAT or LON) = 100km. The second assumption is 50px per
-   * cell and 2m per cell, i.e. 25p/m.
+   * numbers are correct. Thus: 1 degree (LAT or LON) = 100km. The second assumption is 2m per
+   * cell; this later value can be modified by the user.
    */
-  public static final int WMS_SCALE = 25 * 100 * 1000;
+  public static final double WMS_MPERCELL = 2.0;
   // Tile size with the WMS server
   private static final int TILE = 256;
-  // Named layers, TOOD: should be from map configuration.
-  // Example wmsLayers = "TOPO-WMS";
-  // WMS URL , TODO: should be from map configuration.
-  // Example wmsURL = "https://ows.mundialis.de/services/service?VERSION=1.3.1&Service=WMS";
   // Weak Caching.
   private static final CircularFifoQueue<String> cacheKeys = new CircularFifoQueue<String>(200);
   private static final Map<String, BufferedImage> cache = new WeakHashMap<String, BufferedImage>();
@@ -112,10 +110,10 @@ public class WmsImage {
               .filter(it -> wmsLayers.contains(it.getName()))
               .collect(Collectors.toList());
       ExecutorService executorService = Executors.newCachedThreadPool();
-      for (int x = (int) x1t; x < x2t + 1; x++) {
-        final int xt = x;
-        for (int y = (int) y1t; y < y2t + 1; y++) {
-          final int yt = y;
+      for (double x = x1t; x < x2t + 1; x++) {
+        final double xt = x;
+        for (double y = y1t; y < y2t + 1; y++) {
+          final double yt = y;
           executorService.execute(
               () -> {
                 try {
@@ -123,14 +121,14 @@ public class WmsImage {
                   BufferedImage img = cache.get(key);
                   if (img == null) {
                     // WMS coordinates suffix w
-                    double x1w = xt / scaleInt / zone.getWmsScale();
-                    double y1w = -yt / scaleInt / zone.getWmsScale();
-                    double x2w = (xt + 1) / scaleInt / zone.getWmsScale();
-                    double y2w = -(yt + 1) / scaleInt / zone.getWmsScale();
+                    double x1w = xt * TILE / scaleInt / WmsImage.getWmsScale(zone);
+                    double y1w = -yt * TILE / scaleInt / WmsImage.getWmsScale(zone);
+                    double x2w = (xt + 1) * TILE / scaleInt / WmsImage.getWmsScale(zone);
+                    double y2w = -(yt + 1) *TILE / scaleInt / WmsImage.getWmsScale(zone);
 
                     GetMapRequest request = wms.createGetMapRequest();
                     request.setFormat("image/png");
-                    request.setDimensions(2 * TILE, 2 * TILE);
+                    request.setDimensions(2 * TILE, 2 * TILE); // Twice, to increase resolution
                     request.setTransparent(true);
                     request.setSRS("EPSG:4326");
                     request.setBBox(y2w + "," + x1w + "," + y1w + "," + x2w);
@@ -161,5 +159,14 @@ public class WmsImage {
     } catch (Exception e) {
       System.err.println(e);
     }
+  }
+  
+  /**
+   * Get the correct scale.
+   * @param zone
+   * @return scale
+   */
+  public static double getWmsScale(Zone zone) {
+	  return zone.getGrid().getSize() * 100 * 1000 / zone.getWmsMPerCell();
   }
 }

@@ -2059,7 +2059,7 @@
                   </object>
                  </at>
                  <at name="columns">5</at>
-                 <at name="name">wmsScale</at>
+                 <at name="name">wmsMPerCell</at>
                  <at name="width">116</at>
                  <at name="height">20</at>
                 </object>

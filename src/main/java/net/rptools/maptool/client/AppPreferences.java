@@ -352,8 +352,8 @@ public class AppPreferences {
   private static final String KEY_DEFAULT_UNITS_PER_CELL = "unitsPerCell";
   private static final int DEFAULT_DEFAULT_UNITS_PER_CELL = 5;
 
-  private static final String KEY_DEFAULT_WMS_SCALE = "wmsScale";
-  private static final int DEFAULT_DEFAULT_WMS_SCALE = WmsImage.WMS_SCALE;
+  private static final String KEY_DEFAULT_WMS_MPERCELL = "wmsMPerCell";
+  private static final double DEFAULT_DEFAULT_WMS_MPERCELL = WmsImage.WMS_MPERCELL;
 
   private static final String KEY_DEFAULT_VISION_DISTANCE = "defaultVisionDistance";
   private static final int DEFAULT_DEFAULT_VISION_DISTANCE = 1000;
@@ -683,8 +683,8 @@ public class AppPreferences {
     return prefs.getDouble(KEY_DEFAULT_UNITS_PER_CELL, DEFAULT_DEFAULT_UNITS_PER_CELL);
   }
 
-  public static int getDefaultWmsScale() {
-    return prefs.getInt(KEY_DEFAULT_WMS_SCALE, DEFAULT_DEFAULT_WMS_SCALE);
+  public static double getDefaultWmsMPerCell() {
+    return prefs.getDouble(KEY_DEFAULT_WMS_MPERCELL, DEFAULT_DEFAULT_WMS_MPERCELL);
   }
 
   public static void setDefaultVisionDistance(int dist) {

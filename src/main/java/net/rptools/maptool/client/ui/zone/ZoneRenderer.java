@@ -4773,24 +4773,24 @@ public class ZoneRenderer extends JComponent
       BufferedImage image = ImageManager.getImageAndWait(assetId);
       // Transform: token is centered, map has pivot geoopts[0,1] = geoopts[2,3],
       // Observe different world, token, image coords;
-      int imageW = image.getWidth();
-      int imageH = image.getHeight();
+      double imageW = image.getWidth();
+      double imageH = image.getHeight();
       double worldX = geopts[2] - geopts[0] * geopts[4];
       double worldY = geopts[3] - geopts[1] * geopts[5];
       double worldW = imageW * geopts[4];
       double worldH = -imageH * geopts[5];
       // Explanation with the constants
-      int tokenX = (int) (worldX * WmsImage.WMS_SCALE);
-      int tokenY = (int) (-worldY * WmsImage.WMS_SCALE);
-      int tokenW = (int) (worldW * WmsImage.WMS_SCALE);
-      int tokenH = (int) (-worldH * WmsImage.WMS_SCALE);
+      int tokenX = (int) (worldX * WmsImage.getWmsScale(zone));
+      int tokenY = (int) (-worldY * WmsImage.getWmsScale(zone));
+      int tokenW = (int) (worldW * WmsImage.getWmsScale(zone));
+      int tokenH = (int) (-worldH * WmsImage.getWmsScale(zone));
       token.setX(tokenX);
       token.setY(tokenY);
       token.setWidth(tokenW);
       token.setHeight(tokenH);
-      log.debug("imageW={}, imageH={}", imageW, imageH);
-      log.debug("worldX={}, worldY={}, worldW={}, worldH={}", worldX, worldY, worldW, worldH);
-      log.debug("tokenX={}, tokenY={}, tokenW={}, tokenH={}", tokenX, tokenY, tokenW, tokenH);
+      log.info("imageW={}, imageH={}", imageW, imageH);
+      log.info("worldX={}, worldY={}, worldW={}, worldH={}", worldX, worldY, worldW, worldH);
+      log.info("tokenX={}, tokenY={}, tokenW={}, tokenH={}", tokenX, tokenY, tokenW, tokenH);
     }
   }
 

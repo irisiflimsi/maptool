@@ -19,8 +19,12 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 
-public class Scale implements Serializable {
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import net.rptools.lib.image.WmsImage;
+
+public class Scale implements Serializable {
   private final double oneToOneScale = 1; // Let this be configurable at some point
   private double scale = oneToOneScale;
   private final double scaleIncrement = .075;

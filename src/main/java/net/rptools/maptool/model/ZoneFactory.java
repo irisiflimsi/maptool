@@ -59,7 +59,7 @@ public class ZoneFactory {
     zone.setVisible(AppPreferences.getNewMapsVisible());
     zone.setHasFog(AppPreferences.getNewMapsHaveFOW());
     zone.setUnitsPerCell(AppPreferences.getDefaultUnitsPerCell());
-    zone.setWmsScale(AppPreferences.getDefaultWmsScale());
+    zone.setWmsMPerCell(AppPreferences.getDefaultWmsMPerCell());
     zone.setTokenVisionDistance(AppPreferences.getDefaultVisionDistance());
     zone.setVisionType(AppPreferences.getDefaultVisionType());
 
